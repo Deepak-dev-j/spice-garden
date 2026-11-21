@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}My Orders{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4">My orders</h1>
+  {% for order in orders %}
+    <a class="card border-0 shadow-sm rounded-4 p-3 mb-3 text-decoration-none text-dark d-block" href="{% url 'order_detail' order.pk %}">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <div>
+          <div class="fw-bold">Order #{{ order.pk }}</div>
+          <div class="small text-muted">{{ order.created_at|date:"d M Y, h:i A" }} · {{ order.items.count }} item(s)</div>
+        </div>
+        <div class="text-end">
+          <span class="badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+          <div class="fw-bold mt-1">₹{{ order.total }}</div>
+        </div>
+      </div>
+    </a>
+  {% empty %}
+    <div class="text-center py-5">
+      <p class="fs-5">You haven't placed any orders yet.</p>
+      <a class="btn btn-brand" href="{% url 'menu' %}">Explore the menu</a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

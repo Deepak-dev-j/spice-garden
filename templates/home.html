@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="hero py-5">
+  <div class="container py-lg-4">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6">
+        <span class="eyebrow">Fast delivery · Fresh food · Happy bellies</span>
+        <h1 class="display-5 fw-bold mt-3">Your favourite meals, <span class="text-brand">delivered hot</span> to your door.</h1>
+        <p class="lead text-muted">Biryani, pizza, South Indian classics and more. Order in just a few taps.</p>
+        <form action="{% url 'menu' %}" method="get" class="d-flex gap-2 my-4" role="search">
+          <input type="search" name="q" class="form-control form-control-lg" placeholder="Search for biryani, pizza, dosa…" aria-label="Search dishes">
+          <button class="btn btn-brand btn-lg px-4" type="submit">Search</button>
+        </form>
+        <div class="d-flex gap-2 flex-wrap">
+          <a class="btn btn-brand btn-lg" href="{% url 'menu' %}">Order now</a>
+          <a class="btn btn-outline-brand btn-lg" href="#offers">View offers</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-art" aria-hidden="true">
+          <span class="hero-card c1">🍛</span>
+          <span class="hero-card c2">🍕</span>
+          <span class="hero-card c3">🍔</span>
+          <span class="hero-card c4">🥞</span>
+          <span class="hero-card c5">🍰</span>
+          <span class="hero-card c6">🥤</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <h2 class="section-title h3 mb-4">Popular categories</h2>
+  <div class="row g-3">
+    {% for cat in categories %}
+    <div class="col-6 col-md-3 col-lg">
+      <a class="cat-card card border-0 shadow-sm text-center p-3 h-100" href="{% url 'menu' %}?category={{ cat.slug }}">
+        <div class="fs-1">{{ cat.emoji }}</div>
+        <div class="fw-semibold mt-2">{{ cat.name }}</div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container pb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="section-title h3 mb-0">Best-selling dishes</h2>
+    <a href="{% url 'menu' %}?sort=popular" class="fw-semibold text-brand text-decoration-none">See all</a>
+  </div>
+  <div class="row g-4">
+    {% for item in popular_items %}
+    <div class="col-6 col-md-4 col-lg-3">{% include "partials/food_card.html" %}</div>
+    {% empty %}
+    <p class="text-muted">Our chefs are preparing new favourites. Check the full menu!</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container pb-5" id="offers">
+  <h2 class="section-title h3 mb-4">Special offers</h2>
+  <div class="row g-4">
+    {% for coupon in offers %}
+    <div class="col-md-4">
+      <div class="offer-card card border-0 shadow-sm p-4 h-100">
+        <div class="small text-uppercase fw-bold opacity-75">Use code</div>
+        <div class="fs-3 fw-bold">{{ coupon.code }}</div>
+        <p class="mb-0">{{ coupon.description|default:"Discount on your order" }}</p>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No offers right now. Check back soon!</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container pb-5">
+  <div class="row g-4 text-center">
+    <div class="col-6 col-lg-3"><div class="highlight"><i class="bi bi-leaf"></i><h3 class="h6 mt-2">Fresh ingredients</h3><p class="small text-muted mb-0">Prepared daily with care.</p></div></div>
+    <div class="col-6 col-lg-3"><div class="highlight"><i class="bi bi-geo"></i><h3 class="h6 mt-2">Live tracking</h3><p class="small text-muted mb-0">Know where your order is.</p></div></div>
+    <div class="col-6 col-lg-3"><div class="highlight"><i class="bi bi-shield-check"></i><h3 class="h6 mt-2">Secure checkout</h3><p class="small text-muted mb-0">Your details stay private.</p></div></div>
+    <div class="col-6 col-lg-3"><div class="highlight"><i class="bi bi-headset"></i><h3 class="h6 mt-2">Helpful support</h3><p class="small text-muted mb-0">Chat with Spice Bot anytime.</p></div></div>
+  </div>
+</section>
+
+<section class="container pb-5" id="about">
+  <div class="about-box p-4 p-md-5 rounded-4">
+    <h2 class="section-title h3">About {{ site.name }}</h2>
+    <p class="mb-0 text-muted">We cook every dish fresh to order, using family recipes and quality ingredients. Our goal is simple: a delicious meal, delivered on time, every time.</p>
+  </div>
+</section>
+
+<section class="container pb-5">
+  <h2 class="section-title h3 mb-4">What our customers say</h2>
+  <div class="row g-4">
+    <div class="col-md-4"><div class="card border-0 shadow-sm p-4 h-100"><p>"The biryani was hot, fragrant and perfectly spiced. Will order again!"</p><div class="fw-bold">Priya S.</div></div></div>
+    <div class="col-md-4"><div class="card border-0 shadow-sm p-4 h-100"><p>"Easy ordering and the tracking is very helpful. Great experience."</p><div class="fw-bold">Arjun K.</div></div></div>
+    <div class="col-md-4"><div class="card border-0 shadow-sm p-4 h-100"><p>"Had a small issue with my order and the support chat fixed it quickly."</p><div class="fw-bold">Meena R.</div></div></div>
+  </div>
+</section>
+
+{% endblock %}

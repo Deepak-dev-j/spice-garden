@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Your Cart{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4"><i class="bi bi-bag-check text-brand"></i> Your cart</h1>
+
+  {% if summary.lines %}
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-4">
+        <ul class="list-group list-group-flush">
+          {% for line in summary.lines %}
+          <li class="list-group-item p-3 d-flex flex-wrap align-items-center gap-3">
+            <div class="flex-grow-1">
+              <div class="fw-semibold">{{ line.item.name }}</div>
+              <div class="small text-muted">₹{{ line.item.price }} each</div>
+            </div>
+            <form method="post" action="{% url 'cart_update' %}" class="d-flex align-items-center gap-2">
+              {% csrf_token %}
+              <input type="hidden" name="food_id" value="{{ line.item.pk }}">
+              <button class="btn btn-sm btn-outline-brand" name="action" value="decrease" aria-label="Decrease quantity">−</button>
+              <span class="fw-bold text-center" style="min-width:28px">{{ line.qty }}</span>
+              <button class="btn btn-sm btn-outline-brand" name="action" value="increase" aria-label="Increase quantity">+</button>
+              <button class="btn btn-sm btn-link text-danger" name="action" value="remove">Remove</button>
+            </form>
+            <div class="fw-bold text-end" style="min-width:90px">₹{{ line.subtotal }}</div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+        <h2 class="h5 fw-bold">Apply coupon</h2>
+        {% if summary.coupon %}
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-success">{{ summary.coupon.code }} applied</span>
+            <form method="post" action="{% url 'cart_coupon_remove' %}">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-link text-danger" type="submit">Remove</button>
+            </form>
+          </div>
+        {% else %}
+          <form method="post" action="{% url 'cart_coupon_apply' %}" class="d-flex gap-2 mb-2">
+            {% csrf_token %}
+            <input name="code" class="form-control text-uppercase" placeholder="Enter code" required maxlength="20" aria-label="Coupon code">
+            <button class="btn btn-outline-brand" type="submit">Apply</button>
+          </form>
+          <small class="text-muted">Try WELCOME10 or FLAT50</small>
+        {% endif %}
+        <hr>
+        <div class="d-flex justify-content-between"><span>Subtotal</span><span>₹{{ summary.subtotal }}</span></div>
+        {% if summary.discount > 0 %}
+        <div class="d-flex justify-content-between text-success"><span>Discount</span><span>−₹{{ summary.discount }}</span></div>
+        {% endif %}
+        <div class="d-flex justify-content-between"><span>Delivery</span><span>{% if summary.delivery_fee == 0 %}FREE{% else %}₹{{ summary.delivery_fee }}{% endif %}</span></div>
+        <div class="d-flex justify-content-between"><span>Tax</span><span>₹{{ summary.tax }}</span></div>
+        <div class="d-flex justify-content-between fw-bold fs-5 mt-2"><span>Total</span><span>₹{{ summary.total }}</span></div>
+        {% if user.is_authenticated %}
+          <a class="btn btn-brand w-100 mt-3" href="{% url 'checkout' %}">Proceed to checkout</a>
+        {% else %}
+          <a class="btn btn-brand w-100 mt-3" href="{% url 'login' %}?next={% url 'checkout' %}">Login to checkout</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <div class="fs-1">🛒</div>
+    <h2 class="h4 mt-2">Your cart is empty</h2>
+    <p class="text-muted">Looks like you haven't added anything yet. Explore our tasty menu!</p>
+    <a class="btn btn-brand btn-lg" href="{% url 'menu' %}">Browse menu</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

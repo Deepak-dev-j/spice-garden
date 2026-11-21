@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Order placed{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 text-center mx-auto" style="max-width:560px">
+    <div class="fs-1">🎉</div>
+    <h1 class="h3 fw-bold mt-2">Thank you, {{ order.customer_name }}!</h1>
+    <p class="text-muted">Your order <strong>#{{ order.pk }}</strong> has been placed.</p>
+    <p class="mb-1">Status: <span class="badge bg-warning text-dark">{{ order.get_status_display }}</span></p>
+    <p class="mb-4">Total paid on delivery: <strong>₹{{ order.total }}</strong> ({{ order.get_payment_method_display }})</p>
+    <div class="d-flex gap-2 justify-content-center flex-wrap">
+      <a class="btn btn-brand" href="{% url 'order_detail' order.pk %}">Track order</a>
+      <a class="btn btn-outline-brand" href="{% url 'menu' %}">Order more</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

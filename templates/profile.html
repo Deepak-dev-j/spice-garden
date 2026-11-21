@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4">My profile</h1>
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+        <h2 class="h5 fw-bold">Account details</h2>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="profile">
+          {% include "partials/form_fields.html" with form=profile_form %}
+          <button class="btn btn-brand" type="submit">Save changes</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h2 class="h5 fw-bold">Saved addresses</h2>
+        {% for address in addresses %}
+          <div class="d-flex justify-content-between align-items-start border rounded-3 p-3 mb-2">
+            <div>
+              <span class="badge bg-light text-dark border">{{ address.get_label_display }}</span>
+              {% if address.is_default %}<span class="badge bg-success">Default</span>{% endif %}
+              <div class="fw-semibold mt-1">{{ address.full_name }} · {{ address.phone }}</div>
+              <div class="small text-muted">{{ address.as_text }}</div>
+            </div>
+            <form method="post" action="{% url 'address_delete' address.pk %}">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-link text-danger" type="submit">Delete</button>
+            </form>
+          </div>
+        {% empty %}
+          <p class="text-muted">No addresses saved yet.</p>
+        {% endfor %}
+      </div>
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+        <h2 class="h5 fw-bold">Add a new address</h2>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="address">
+          {% include "partials/form_fields.html" with form=address_form %}
+          <button class="btn btn-brand" type="submit">Save address</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4">Checkout</h1>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <form method="post" class="card border-0 shadow-sm rounded-4 p-4 prevent-double">
+        {% csrf_token %}
+        {% include "partials/form_fields.html" %}
+        <button class="btn btn-brand btn-lg w-100" type="submit">Place order · ₹{{ summary.total }}</button>
+      </form>
+    </div>
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+        <h2 class="h5 fw-bold">Order summary</h2>
+        <ul class="list-unstyled mb-3">
+          {% for line in summary.lines %}
+          <li class="d-flex justify-content-between small py-1">
+            <span>{{ line.qty }} × {{ line.item.name }}</span><span>₹{{ line.subtotal }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="d-flex justify-content-between"><span>Subtotal</span><span>₹{{ summary.subtotal }}</span></div>
+        {% if summary.discount > 0 %}<div class="d-flex justify-content-between text-success"><span>Discount</span><span>−₹{{ summary.discount }}</span></div>{% endif %}
+        <div class="d-flex justify-content-between"><span>Delivery</span><span>{% if summary.delivery_fee == 0 %}FREE{% else %}₹{{ summary.delivery_fee }}{% endif %}</span></div>
+        <div class="d-flex justify-content-between"><span>Tax</span><span>₹{{ summary.tax }}</span></div>
+        <div class="d-flex justify-content-between fw-bold fs-5 mt-2"><span>Total</span><span>₹{{ summary.total }}</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

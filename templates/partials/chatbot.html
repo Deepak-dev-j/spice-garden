@@ -1,0 +1,41 @@
+<button id="chat-toggle" class="chat-fab" type="button" aria-label="Open support chat" aria-expanded="false" aria-controls="chat-window">
+  <i class="bi bi-chat-dots-fill"></i>
+</button>
+
+<section id="chat-window" class="chat-window" hidden
+         aria-label="Spice Bot support chat"
+         data-message-url="{% url 'chat_message' %}"
+         data-history-url="{% url 'chat_history' %}"
+         data-clear-url="{% url 'chat_clear' %}">
+  <header class="chat-header">
+    <div class="d-flex align-items-center gap-2">
+      <div class="bot-avatar" aria-hidden="true">🤖</div>
+      <div>
+        <div class="fw-bold">Spice Bot</div>
+        <small class="opacity-75">Support · replies instantly</small>
+      </div>
+    </div>
+    <div>
+      <button id="chat-clear" class="btn btn-sm btn-link text-white" type="button" title="Clear chat" aria-label="Clear chat"><i class="bi bi-trash"></i></button>
+      <button id="chat-close" class="btn btn-sm btn-link text-white" type="button" aria-label="Close chat"><i class="bi bi-x-lg"></i></button>
+    </div>
+  </header>
+
+  <div id="chat-messages" class="chat-body" aria-live="polite"></div>
+
+  <div class="quick-actions">
+    <button type="button" data-quick="track my order">Track Order</button>
+    <button type="button" data-quick="cancel order">Cancel Order</button>
+    <button type="button" data-quick="refund status">Refund Status</button>
+    <button type="button" data-quick="payment issue">Payment Issue</button>
+    <button type="button" data-quick="one item missing">Missing Item</button>
+    <button type="button" data-quick="wrong food received">Wrong Item</button>
+    <button type="button" data-quick="menu information">Menu Information</button>
+    <button type="button" data-quick="contact support">Contact Support</button>
+  </div>
+
+  <form id="chat-form" class="chat-input" autocomplete="off">
+    <input id="chat-input" type="text" maxlength="500" placeholder="Type your message…" aria-label="Type your message">
+    <button type="submit" aria-label="Send message"><i class="bi bi-send-fill"></i></button>
+  </form>
+</section>
